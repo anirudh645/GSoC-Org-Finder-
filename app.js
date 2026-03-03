@@ -81,6 +81,49 @@ const AN={
 AN.trackVisit();
 
 // ══════════════════════════════════════════════
+// URL VALIDATION & SANITIZATION
+// ══════════════════════════════════════════════
+/**
+ * Validates and sanitizes project ideas URLs for safe display
+ * Ensures only http/https protocols are allowed to prevent XSS attacks
+ * Automatically prepends https:// if no protocol is specified
+ * 
+ * @param {string} ideasUrl - The raw URL string from organization data
+ * @returns {string|null} - Sanitized URL if valid, null otherwise
+ */
+function validateIdeasUrl(ideasUrl) {
+  // Return null for empty or whitespace-only strings
+  if (!ideasUrl || !ideasUrl.trim()) {
+    return null;
+  }
+  
+  try {
+    let url = ideasUrl.trim();
+    
+    // Prepend https:// if no protocol specified
+    if (!url.match(/^https?:\/\//i)) {
+      url = 'https://' + url;
+    }
+    
+    // Parse and validate URL
+    const urlObj = new URL(url);
+    
+    // Security: Only allow http and https protocols
+    // This prevents javascript:, data:, file:, and other potentially dangerous schemes
+    if (urlObj.protocol === 'http:' || urlObj.protocol === 'https:') {
+      return url;
+    }
+    
+    console.warn('Rejected non-HTTP(S) URL:', ideasUrl);
+    return null;
+  } catch (e) {
+    // Invalid URL format
+    console.warn('Invalid ideas URL format:', ideasUrl, e);
+    return null;
+  }
+}
+
+// ══════════════════════════════════════════════
 // TRENDING
 // ══════════════════════════════════════════════
 function renderTrending(){
@@ -649,40 +692,26 @@ function openModal(idx){
     mLinkEl.href=isUmbrella?`https://github.com/${owner}`:`https://github.com/${o.github}`;
     mLinkEl.textContent=isUmbrella?'View GitHub Org →':'View Repository →';
   }
-  // Set ideas link
+  
+  // Validate and display Ideas page link if available
+  // Uses security-hardened validation that ensures only http/https protocols
+  // Displays fallback message when no valid link exists
   const mIdeasEl=document.getElementById('mIdeasLink');
   const mIdeasText=document.getElementById('mIdeasText');
+  const validatedUrl=validateIdeasUrl(o.ideas);
   
-  let isValidIdeasUrl=false;
-  
-  if(mIdeasEl && o.ideas){
-    const trimmedIdeas=o.ideas.trim();
-    if(trimmedIdeas){
-      try {
-        // Prepend https:// if no protocol
-        let url=trimmedIdeas;
-        if(!url.match(/^https?:\/\//i)){
-          url='https://'+url;
-        }
-        const urlObj=new URL(url);
-        // Only allow http and https
-        if(urlObj.protocol==='http:' || urlObj.protocol==='https:'){
-          mIdeasEl.href=url;
-          mIdeasEl.textContent='View Ideas List →';
-          isValidIdeasUrl=true;
-        }
-      } catch(e){
-        // Invalid URL - will be hidden below
-      }
+  if(mIdeasEl){
+    mIdeasEl.style.display=validatedUrl?'inline-flex':'none';
+    if(validatedUrl){
+      mIdeasEl.href=validatedUrl;
+      mIdeasEl.textContent='View Ideas List →';
     }
   }
   
-  if(mIdeasEl){
-    mIdeasEl.style.display=isValidIdeasUrl?'inline-flex':'none';
-  }
   if(mIdeasText){
-    mIdeasText.style.display=isValidIdeasUrl?'none':'block';
+    mIdeasText.style.display=validatedUrl?'none':'block';
   }
+  
   updateModalCompareBtn();
   document.getElementById('modalBg').classList.add('open');
   document.body.style.overflow='hidden';

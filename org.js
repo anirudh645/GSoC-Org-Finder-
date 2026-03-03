@@ -185,3 +185,8 @@ const ORGS = [
   { name:"Wikimedia Foundation", cat:"web", years:9, firstYear:2016, competition:"hot", github:"wikimedia/mediawiki", tags:["javascript","html","php","css","mediawiki","open knowledge"], desc:"Bringing free educational content to the world.", fit:["PHP/JS devs","Open knowledge"], ideas:"https://www.mediawiki.org/wiki/Google_Summer_of_Code/2026" },
   { name:"Zulip", cat:"other", years:9, firstYear:2016, competition:"moderate", github:"zulip/zulip", tags:["python","javascript","typescript","django","react native","chat"], desc:"Organized chat for distributed teams.", fit:["Python/JS devs","Real-time apps"], ideas:"https://github.com/zulip/zulip/wiki/GSoC-2026" }
 ];
+
+// Export for Node.js validation script, but keep working in browser
+if (typeof module !== 'undefined' && module.exports) {
+  module.exports = ORGS;
+}
