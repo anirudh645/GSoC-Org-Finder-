@@ -170,18 +170,11 @@ Or connect the repo to Vercel and it deploys automatically on every push.
 ```bash
 open index.html   # macOS — works without API (GitHub stats won't load)
 ```
-Foideas: "https://github.com/org/repo/wiki/Ideas",  // project ideas page URL (optional)
-  tags: ["python", "c++", "machine learning"],
-  desc: "Short description of what the org does.",
-  fit: ["Python devs", "ML researchers"]
-}
-```
+For full functionality locally, run `vercel dev` to start the Edge Function.
 
-**Ideas URL Requirements**:
-- Must use `http://` or `https://` protocol (or protocol will be added automatically)
-- Should link to the organization's specific project ideas page
-- Generic GSoC organization pages are acceptable as placeholders but should be updated when possible
-- Run `node validate-ideas-urls.js` to check all URLs before submitting🤝 Contributing
+---
+
+## 🤝 Contributing
 
 Found a missing org, wrong category, or incorrect tags? PRs are very welcome!
 
@@ -199,11 +192,18 @@ Each org entry looks like this:
   firstYear: 2021,          // first year they participated
   competition: "moderate",  // hot | moderate | chill
   github: "owner/repo",     // main repo (or just "owner" for umbrella orgs)
+  ideas: "https://github.com/org/repo/wiki/Ideas",  // project ideas page URL (optional)
   tags: ["python", "c++", "machine learning"],
   desc: "Short description of what the org does.",
   fit: ["Python devs", "ML researchers"]
 }
 ```
+
+**Ideas URL Requirements**:
+- Must use `http://` or `https://` protocol (or protocol will be added automatically)
+- Should link to the organization's specific project ideas page
+- Generic GSoC organization pages are acceptable as placeholders but should be updated when possible
+- Run `node validate-ideas-urls.js` to check all URLs before submitting
 
 **Competition levels** (subjective, based on org popularity + slot count):
 - `hot` — high applicant volume, very competitive (Django, LLVM, Git, KDE…)

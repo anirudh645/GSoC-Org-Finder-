@@ -39,8 +39,9 @@ function validateUrl(url) {
   try {
     let testUrl = url.trim();
     
-    // Add https:// if no protocol
-    if (!testUrl.match(/^https?:\/\//i)) {
+    // Add https:// only if no protocol scheme is present
+    // This prevents converting malicious URLs like javascript:alert(1) to https://javascript:alert(1)
+    if (!testUrl.includes('://')) {
       testUrl = 'https://' + testUrl;
     }
     

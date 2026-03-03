@@ -100,8 +100,9 @@ function validateIdeasUrl(ideasUrl) {
   try {
     let url = ideasUrl.trim();
     
-    // Prepend https:// if no protocol specified
-    if (!url.match(/^https?:\/\//i)) {
+    // Prepend https:// only if no protocol scheme is present
+    // This prevents converting malicious URLs like javascript:alert(1) to https://javascript:alert(1)
+    if (!url.includes('://')) {
       url = 'https://' + url;
     }
     
