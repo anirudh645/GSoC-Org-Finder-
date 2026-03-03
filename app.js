@@ -655,22 +655,25 @@ function openModal(idx){
   
   let isValidIdeasUrl=false;
   
-  if(mIdeasEl && o.ideas && o.ideas !== 'No such link is found'){
-    try {
-      // Prepend https:// if no protocol
-      let url=o.ideas;
-      if(!url.match(/^https?:\/\//i)){
-        url='https://'+url;
+  if(mIdeasEl && o.ideas){
+    const trimmedIdeas=o.ideas.trim();
+    if(trimmedIdeas){
+      try {
+        // Prepend https:// if no protocol
+        let url=trimmedIdeas;
+        if(!url.match(/^https?:\/\//i)){
+          url='https://'+url;
+        }
+        const urlObj=new URL(url);
+        // Only allow http and https
+        if(urlObj.protocol==='http:' || urlObj.protocol==='https:'){
+          mIdeasEl.href=url;
+          mIdeasEl.textContent='View Ideas List →';
+          isValidIdeasUrl=true;
+        }
+      } catch(e){
+        // Invalid URL - will be hidden below
       }
-      const urlObj=new URL(url);
-      // Only allow http and https
-      if(urlObj.protocol==='http:' || urlObj.protocol==='https:'){
-        mIdeasEl.href=url;
-        mIdeasEl.textContent='View Ideas List →';
-        isValidIdeasUrl=true;
-      }
-    } catch(e){
-      // Invalid URL - will be hidden below
     }
   }
   
